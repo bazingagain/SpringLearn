@@ -52,16 +52,16 @@ public class CDPlayerConfig {
         return new CDPlayer(sgtPeppers());
     }
 
-    @Bean
-    public CDPlayer cdPlayer(CompactDisc compactDisc) {
-        return new CDPlayer(compactDisc);
-    }
-
-    @Bean
-    public CDPlayer cdPlayer1(CompactDisc compactDisc) {
-        CDPlayer cdPlayer = new CDPlayer(compactDisc);
-        cdPlayer.setCd(compactDisc); //setter方式注入
-        return cdPlayer;
-    }
+//    @Bean
+//    public CDPlayer cdPlayer(CompactDisc compactDisc) {
+//        return new CDPlayer(compactDisc);
+//    }
+//
+//    @Bean
+//    public CDPlayer cdPlayer1(CompactDisc compactDisc) {
+//        CDPlayer cdPlayer = new CDPlayer(compactDisc);
+//        cdPlayer.setCd(compactDisc); //setter方式注入
+//        return cdPlayer;
+//    }
 
 }

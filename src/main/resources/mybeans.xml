@@ -2,8 +2,120 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       xmlns:c="http://www.springframework.org/schema/c" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:util="http://www.springframework.org/schema/util" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
     <context:component-scan base-package="com.leon.springlearn"/>
 
-    <!--<bean id="compactDisc" class="com.leon.springlearn.dao.impl.SgtPeppers"/>-->
+    <bean class="com.leon.springlearn.dao.impl.SgtPeppers"/>
+    <bean id="compactDisc" class="com.leon.springlearn.dao.impl.SgtPeppers"/>
+    <bean id="compactDisc2_1" class="com.leon.springlearn.dao.impl.BlackDisc">
+        <constructor-arg value="Sgt. Pepper's Lonely Hearts Club Band"/>
+        <constructor-arg value="The Beatles"/>
+    </bean>
+    <bean id="compactDisc2_2" class="com.leon.springlearn.dao.impl.BlackDisc"
+          c:title="Sgt. Pepper's Lonely Hearts Club Band"
+          c:artist="The Beatles"/>
+    <bean id="compactDisc2_3" class="com.leon.springlearn.dao.impl.BlackDisc"
+          c:_0="Sgt. Pepper's Lonely Hearts Club Band"
+          c:_1="The Beatles"/>
+    <bean id="compactDisc3_1" class="com.leon.springlearn.dao.impl.BlackDisc">
+        <constructor-arg value="Sgt. Pepper's Lonely Hearts Club Band"/>
+        <constructor-arg value="The Beatles"/>
+        <!--<constructor-arg><null/></constructor-arg>-->
+        <constructor-arg>
+            <list>
+                <value>Sgt. Pepper's Lonely Hearts Club Band</value>
+                <value>With a Little Help from Friend</value>
+            </list>
+        </constructor-arg>
+    </bean>
+    <bean id="compactDisc3_2" class="com.leon.springlearn.dao.impl.BlackDisc">
+        <constructor-arg value="Sgt. Pepper's Lonely Hearts Club Band"/>
+        <constructor-arg value="The Beatles"/>
+        <constructor-arg>
+            <list>
+                <value>Sgt. Pepper's Lonely Hearts Club Band</value>
+                <value>With a Little Help from Friend</value>
+            </list>
+        </constructor-arg>
+    </bean>
+    <!--<util:list id="trackList">-->
+        <!--<value>Sgt. Pepper's Lonely Hearts Club Band</value>-->
+        <!--<value>With a Little Help from Friend</value>-->
+    <!--</util:list>-->
+    <!--<bean id="compactDisc_p3" class="com.leon.springlearn.dao.impl.BlackDisc"-->
+          <!--p:title="Sgt. Pepper's Lonely Hearts Club Band"-->
+          <!--p:artist="The Beatles"-->
+          <!--p:tracks-ref="trackList">-->
+    <!--</bean>-->
+
+
+    <bean id="beatlesDiscography" class="com.leon.springlearn.dao.impl.Discography">
+        <constructor-arg value="The Beatles"/>
+        <constructor-arg>
+            <list>
+                <ref bean="compactDisc"/>
+                <ref bean="compactDisc2_1"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="cdPlayer" class="com.leon.springlearn.dao.impl.CDPlayer">
+        <constructor-arg ref="compactDisc"/>
+    </bean>
+    <bean id="cdPlayer2" class="com.leon.springlearn.dao.impl.CDPlayer"
+          c:cd-ref="compactDisc"/>
+    <bean id="cdPlayer3" class="com.leon.springlearn.dao.impl.CDPlayer"
+          c:_0-ref="compactDisc"/>
+
+    <bean id="cdPlayer_p1" class="com.leon.springlearn.dao.impl.CDPlayer">
+        <property name="cd" ref="compactDisc"/> <!--setter方式注入-->
+    </bean>
+    <bean id="cdPlayer_p2" class="com.leon.springlearn.dao.impl.CDPlayer"
+          p:cd-ref="compactDisc"/>
+
+    <bean class="com.leon.springlearn.config.CDPlayerConfig"/>
+
+    <bean id="iceCream" class="com.leon.springlearn.dao.impl.IceCream" primary="true"/>
+    <bean id="notePad" class="com.leon.springlearn.dao.impl.NotePad" scope="prototype"/>
+
+    <bean id="cart" class="com.leon.springlearn.bean.ShoppingCart" scope="session">
+        <aop:scoped-proxy/><!--默认情况下 使用CGLIB-->
+        <aop:scoped-proxy proxy-target-class="false"/> <!--设置proxy-target-class为false,则使用基于接口的代理-->
+    </bean>
+
+    <bean id="sgt" class="com.leon.springlearn.dao.impl.BlackDisc"
+          c:title="${disc.title}"
+          c:artist="${disc.artist}"/>
+
+    <bean id="aaa" class="com.leon.springlearn.dao.impl.BlackDisc"
+          c:title="#{T(System).currentTimeMillis()}"
+          c:artist="#{sgt.title}"
+          c:_0="#{systemProperties['disc.title']}"
+          c:_0="#{3.1415}"
+          c:_0="#{'hello'}"
+          c:_0="#{'hello'[3]}"
+          c:_0="#{'hello'.toUpperCase()}"
+          c:_0="#{false}"
+          c:_0="#{T(java.lang.Math).random()}"
+          c:_0="#{T(java.lang.Math).PI * 2 ^ 2}"
+          c:_0="#{'hello' + 'word'}"
+          c:_0="#{sgt.title == 100}"
+          c:_0="#{sgt.title eq 100}"
+          c:_0="#{sgt.title > 100 ? 'big':'small'}"
+          c:_0="#{sgt.title ?: 'default title'}"
+          c:_0="#{sgt.email matches '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.com'}"
+          c:_0="#{sgt.tracks[4].title}"
+          c:_0="#{sgt.tracks.?[title eq 'haha']}"
+          c:_0="#{sgt.tracks.^[title eq 'haha']}"
+          c:_0="#{sgt.tracks.$[title eq 'haha']}"
+          c:_0="#{sgt.tracks.![title]}"
+          c:_0="#{iceCream}"
+          c:_0="#{cdPlayer.play()}"
+            />
+
+    <context:property-placeholder/>
+
+    <import resource="cdplayer-config.xml"/>
 </beans>

@@ -28,4 +28,9 @@ public class CDPlayer implements MediaPlayer {
     public void setCd(CompactDisc cd) {
         this.cd = cd;
     }
+
+    @Autowired
+    public void insertDics(CompactDisc cd) {
+        this.cd = cd;
+    }
 }
